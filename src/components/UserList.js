@@ -91,6 +91,14 @@ const UserList = () => {
     Axios.get("http://localhost:5000/users/sorted")
       .then((response) => setUsers(response.data))
       .catch((err) => console.log(err));
+    // setUsers((users) =>
+    //   users.sort((a, b) => {
+    //     if (a.name < b.name) {
+    //       return -1;
+    //     }
+    //     return 1;
+    //   })
+    // );
   };
 
   // Delete User

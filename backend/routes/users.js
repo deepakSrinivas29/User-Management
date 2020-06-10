@@ -9,6 +9,14 @@ router.route("/").get((req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
+// get all users after sorting alphabetically
+router.route("/sorted").get((req, res) => {
+  User.find()
+    .sort({ name: 1 })
+    .then((users) => res.json(users))
+    .catch((err) => res.status(400).json("Error: " + err));
+});
+
 // add user
 router.route("/").post((req, res) => {
   const name = req.body.name;
