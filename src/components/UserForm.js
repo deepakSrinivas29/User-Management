@@ -6,8 +6,14 @@ const UserForm = ({
   userDetails,
   updateForm,
   submitAddForm,
+  formName,
+  deleteUser,
 }) => {
   const { name, email } = userDetails;
+
+  const deleteButton = {
+    visibility: formName === "Add User" ? "hidden" : "visible",
+  };
 
   return (
     <Form style={formStyle} onSubmit={submitAddForm}>
@@ -28,32 +34,37 @@ const UserForm = ({
           value={email}
           onChange={updateForm}
         />
+      </FormGroup>
 
-        <FormGroup className="m-3" check inline>
-          <Label check>
-            <Input
-              type="radio"
-              name="role"
-              value="Admin"
-              onChange={updateForm}
-            />{" "}
-            Admin
-          </Label>
-        </FormGroup>
-        <FormGroup check inline>
-          <Label check>
-            <Input
-              type="radio"
-              name="role"
-              value="Customer Executive"
-              onChange={updateForm}
-            />{" "}
-            Customer Executive
-          </Label>
-        </FormGroup>
+      <FormGroup className="m-3" check inline>
+        <Label check>
+          <Input type="radio" name="role" value="Admin" onChange={updateForm} />{" "}
+          Admin
+        </Label>
+      </FormGroup>
+      <FormGroup check inline>
+        <Label check>
+          <Input
+            type="radio"
+            name="role"
+            value="Customer Executive"
+            onChange={updateForm}
+          />{" "}
+          Customer Executive
+        </Label>
+      </FormGroup>
 
-        <Button className="btn btn-primary btn-lg btn-block m-3">
+      <FormGroup inline>
+        <Button className="btn btn-primary btn-sm btn-block m-3">
           {formSubmitButton}
+        </Button>
+
+        <Button
+          className="btn btn-primary btn-sm btn-block m-3"
+          style={deleteButton}
+          onClick={deleteUser}
+        >
+          Delete
         </Button>
       </FormGroup>
     </Form>

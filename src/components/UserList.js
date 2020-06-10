@@ -5,6 +5,7 @@ import Axios from "axios";
 import Navbar from "./Navbar";
 import { Modal } from "react-bootstrap";
 import UserForm from "./UserForm";
+import ico_sorting from "../assets/ico_sorting.svg";
 
 const UserList = () => {
   const initialUserState = {
@@ -25,6 +26,7 @@ const UserList = () => {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   };
 
+  // submit the form
   const submitAddForm = (e) => {
     e.preventDefault();
 
@@ -33,12 +35,19 @@ const UserList = () => {
         .then((response) => {
           setShowForm(false);
           setUserDetails(initialUserState);
+          setUsers((users) => [...users, response.data]);
         })
         .catch((err) => console.log(err));
     } else {
       Axios.put(`http://localhost:5000/users/${currentUserId}`, userDetails)
         .then((response) => {
           setShowForm(false);
+
+          setUsers((users) => {
+            let myUsers = users.filter((user) => user._id !== currentUserId);
+
+            return [...myUsers, response.data];
+          });
           setCurrentUserId("");
         })
         .catch((err) => console.log(err));
@@ -52,12 +61,14 @@ const UserList = () => {
     setUserDetails(initialUserState);
   };
 
+  // Add User button
   const handleAddUser = () => {
     setFormName("Add User");
     setFormSubmitButton("ADD USER");
     setShowForm(true);
   };
 
+  // Edit user button
   const handleEditUser = (id) => {
     setFormName("Edit User");
     setFormSubmitButton("SAVE CHANGES");
@@ -75,10 +86,36 @@ const UserList = () => {
     setShowForm(true);
   };
 
+  // Sort alphabetically
+  const handleSort = () => {
+    Axios.get("http://localhost:5000/users/sorted")
+      .then((response) => setUsers(response.data))
+      .catch((err) => console.log(err));
+  };
+
+  // Delete User
+  const deleteUser = () => {
+    Axios.delete(`http://localhost:5000/users/${currentUserId}`)
+      .then((response) => {
+        console.log(response.data);
+        setShowForm(false);
+        setUsers((users) => users.filter((user) => user._id !== currentUserId));
+        setCurrentUserId("");
+        setUserDetails(initialUserState);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  // Runs once
   useEffect(() => {
     Axios.get("http://localhost:5000/users/")
       .then((response) => setUsers(response.data))
       .catch((err) => console.log(err));
+  }, []);
+
+  // Runs every time when the users change
+  useEffect(() => {
+    setUsers(users);
   }, [users]);
 
   return (
@@ -101,6 +138,8 @@ const UserList = () => {
             userDetails={userDetails}
             updateForm={updateForm}
             submitAddForm={submitAddForm}
+            formName={formName}
+            deleteUser={deleteUser}
           />
         </Modal.Body>
       </Modal>
@@ -108,7 +147,9 @@ const UserList = () => {
       <table className="table table-striped">
         <thead className="thead">
           <tr>
-            <th>NAME</th>
+            <th>
+              NAME <img src={ico_sorting} alt="" onClick={handleSort} />
+            </th>
             <th>EMAIL</th>
             <th>ROLE TYPE</th>
             {/* <th>STATUS</th> */}

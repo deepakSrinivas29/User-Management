@@ -12,6 +12,7 @@ router.route("/").get((req, res) => {
 // get all users after sorting alphabetically
 router.route("/sorted").get((req, res) => {
   User.find()
+    .sort({ name: 1 })
     .then((users) => res.json(users))
     .catch((err) => res.status(400).json("Error: " + err));
 });
@@ -28,7 +29,7 @@ router.route("/").post((req, res) => {
 
   newUser
     .save()
-    .then(() => res.json("User added!"))
+    .then(() => res.json(newUser))
     .catch((err) => res.status(400).json("Error: " + err));
 });
 
@@ -58,7 +59,7 @@ router.route("/:id").put((req, res) => {
 
       user
         .save()
-        .then(() => res.json("User updated!"))
+        .then(() => res.json(user))
         .catch((err) => res.status(400).json("Error: " + err));
     })
     .catch((err) => res.status(400).json("Error: " + err));
