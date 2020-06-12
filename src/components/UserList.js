@@ -42,10 +42,8 @@ const UserList = () => {
       Axios.put(`http://localhost:5000/users/${currentUserId}`, userDetails)
         .then((response) => {
           setShowForm(false);
-
           setUsers((users) => {
             let myUsers = users.filter((user) => user._id !== currentUserId);
-
             return [...myUsers, response.data];
           });
           setCurrentUserId("");
@@ -120,11 +118,6 @@ const UserList = () => {
       .then((response) => setUsers(response.data))
       .catch((err) => console.log(err));
   }, []);
-
-  // Runs every time when the users change
-  useEffect(() => {
-    setUsers(users);
-  }, [users]);
 
   return (
     <>
